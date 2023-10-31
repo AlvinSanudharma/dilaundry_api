@@ -15,4 +15,36 @@ class ShopController extends Controller
             'data' => $shops
         ]);
     }
+
+    public function readRecommendationLimit() {
+        $shops = Shop::orderBy('rate', 'desc')->limit(5)->with('laundries')->get();
+
+        if (count($shops) > 0) {
+            return response()->json([
+                'data' => $shops
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'not found',
+                'data' => []
+            ], 404);
+        }
+
+    }
+
+    public function searchByCity($name) {
+        $shops = Shop::where('city','like','%'.$name.'%',)->orderBy('name')->with('laundries')->get();
+
+        if (count($shops) > 0) {
+            return response()->json([
+                'data' => $shops
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'not found',
+                'data' => []
+            ], 404);
+        }
+
+    }
 }
